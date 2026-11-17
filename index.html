@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Risk Analysis | Portfolio Project</title>
+  <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)" />
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;800;900&display=swap)" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js)"></script>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="ld-shapes"><span class="sq"></span><span class="ci"></span><span class="tr"></span></div>
+    <div class="ld-title">CREDIT RISK LAB</div>
+    <div class="ld-battery"><div class="ld-segs" id="ldSegs"></div><div class="ld-cap"></div></div>
+    <div class="ld-pct" id="ldPct">0%</div>
+    <div class="ld-text" data-i18n="loading">Charging risk model…</div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo"><i class="sq"></i><i class="ci"></i><i class="tr"></i></span>
+      <span>CREDIT/RISK<b>.LAB</b></span>
+    </div>
+    <div class="controls">
+      <div class="accent-picker">
+        <span data-i18n="accent">Accent</span>
+        <button class="sw" data-c="#D7263D" style="background:#D7263D"></button>
+        <button class="sw" data-c="#1B4DDB" style="background:#1B4DDB"></button>
+        <button class="sw" data-c="#F4B400" style="background:#F4B400"></button>
+        <button class="sw" data-c="#0E9F8A" style="background:#0E9F8A"></button>
+        <input type="color" id="accentInput" value="#D7263D" title="Custom" />
+      </div>
+      <button id="langBtn" class="pill"><span class="on" data-l="en">EN</span>/<span data-l="fr">FR</span></button>
+      <button id="themeBtn" class="theme-switch" aria-label="theme">
+        <span class="knob"></span>
+        <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><g stroke-width="2"><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="1" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="23" y2="12"/><line x1="4.2" y1="4.2" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.8" y2="19.8"/><line x1="4.2" y1="19.8" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.8" y2="4.2"/></g></svg>
+        <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <p class="tag" data-i18n="tag">PORTFOLIO PROJECT · DATA SCIENCE · RISK</p>
+        <h1 data-i18n="title">Credit Risk Analysis</h1>
+        <p class="lead" data-i18n="lead">A scoring model that evaluates borrower creditworthiness, predicts default probability and turns it into lending decisions.</p>
+      </div>
+      <div class="hero-geo"><span class="g1"></span><span class="g2"></span><span class="g3"></span><span class="g4"></span></div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpis">
+      <div class="kpi"><span class="kv" data-target="12480" data-dec="0">0</span><span class="kl" data-i18n="k1">Borrowers analysed</span></div>
+      <div class="kpi"><span class="kv" data-target="684" data-dec="0">0</span><span class="kl" data-i18n="k2">Average credit score</span></div>
+      <div class="kpi"><span class="kv" data-target="4.7" data-dec="1" data-suf="%">0</span><span class="kl" data-i18n="k3">Portfolio default rate</span></div>
+      <div class="kpi"><span class="kv" data-target="0.87" data-dec="2">0</span><span class="kl" data-i18n="k4">Model AUC</span></div>
+      <div class="kpi"><span class="kv" data-target="3.2" data-dec="1" data-pre="€" data-suf="M">0</span><span class="kl" data-i18n="k5">Expected loss (12m)</span></div>
+    </section>
+
+    <!-- 01 RATIOS -->
+    <h2 class="sec"><span>01</span><b data-i18n="s1">Financial ratio analysis</b></h2>
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_ratios">Ratio profile: performing vs defaulted</h3><button class="info" data-info="ratios">i</button></div>
+        <div class="chart-box"><canvas id="chRatios"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_table">Key ratios (median)</h3><button class="info" data-info="table">i</button></div>
+        <table class="rtable">
+          <thead><tr><th data-i18n="t_ratio">Ratio</th><th data-i18n="performing">Performing</th><th data-i18n="defaulted">Defaulted</th><th data-i18n="t_signal">Signal</th></tr></thead>
+          <tbody>
+            <tr><td data-i18n="r1">Current ratio</td><td>1.84</td><td>0.92</td><td><i class="dot bad"></i>&lt; 1.0</td></tr>
+            <tr><td data-i18n="r2">Debt / Equity</td><td>0.95</td><td>2.70</td><td><i class="dot bad"></i>&gt; 2.0</td></tr>
+            <tr><td data-i18n="r3">Interest coverage</td><td>6.2x</td><td>1.3x</td><td><i class="dot bad"></i>&lt; 1.5x</td></tr>
+            <tr><td data-i18n="r4">Return on assets</td><td>7.1%</td><td>-1.8%</td><td><i class="dot bad"></i>&lt; 0%</td></tr>
+            <tr><td data-i18n="r5">Debt-to-income</td><td>24%</td><td>47%</td><td><i class="dot bad"></i>&gt; 40%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 02 SCORE -->
+    <h2 class="sec"><span>02</span><b data-i18n="s2">Credit score &amp; default rate</b></h2>
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_dist">Score distribution &amp; default rate by band</h3><button class="info" data-info="dist">i</button></div>
+        <div class="chart-box"><canvas id="chDist"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_pd">PD monitoring: predicted vs actual</h3><button class="info" data-info="pd">i</button></div>
+        <div class="chart-box"><canvas id="chPD"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 03 SIMULATOR -->
+    <h2 class="sec"><span>03</span><b data-i18n="s3">Default-risk prediction: live simulator</b></h2>
+    <div class="card sim">
+      <div class="card-h"><h3 data-i18n="c_sim">Score a new applicant</h3><button class="info" data-info="sim">i</button></div>
+      <div class="sim-grid">
+        <div class="sim-in">
+          <label><span data-i18n="in_late">Late payments (24m)</span><b id="vLate"></b><input type="range" id="iLate" min="0" max="8" value="1" /></label>
+          <label><span data-i18n="in_util">Credit utilization %</span><b id="vUtil"></b><input type="range" id="iUtil" min="0" max="100" value="45" /></label>
+          <label><span data-i18n="in_dti">Debt-to-income %</span><b id="vDti"></b><input type="range" id="iDti" min="5" max="70" value="32" /></label>
+          <label><span data-i18n="in_hist">Credit history (years)</span><b id="vHist"></b><input type="range" id="iHist" min="0" max="25" value="6" /></label>
+          <label><span data-i18n="in_loan">Loan amount €</span><b id="vLoan"></b><input type="range" id="iLoan" min="2000" max="100000" step="1000" value="25000" /></label>
+        </div>
+        <div class="sim-out">
+          <div class="score-big"><span id="oScore">0</span><small>/850</small></div>
+          <div class="gauge"><div class="gauge-bar"></div><div class="gauge-mk" id="oMk"></div></div>
+          <div class="sim-stats">
+            <div><small data-i18n="o_pd">Default probability</small><b id="oPD"></b></div>
+            <div><small data-i18n="o_grade">Grade</small><b id="oGrade"></b></div>
+            <div><small data-i18n="o_el">Expected loss</small><b id="oEL"></b></div>
+            <div><small data-i18n="o_dec">Decision</small><b id="oDec" class="dec"></b></div>
+          </div>
+          <div class="why"><small data-i18n="o_why">Why this score?</small><ul id="oWhy"></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 SEGMENTATION -->
+    <h2 class="sec"><span>04</span><b data-i18n="s4">Customer segmentation</b></h2>
+    <div class="grid g21">
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_seg">Clusters: credit score × debt-to-income</h3><button class="info" data-info="seg">i</button></div>
+        <div class="chart-box tall"><canvas id="chSeg"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_mix">Portfolio mix &amp; default rate</h3><button class="info" data-info="mix">i</button></div>
+        <div class="chart-box tall"><canvas id="chMix"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 05 PERFORMANCE -->
+    <h2 class="sec"><span>05</span><b data-i18n="s5">Model performance evaluation</b></h2>
+    <div class="grid g3">
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_roc">ROC curve</h3><button class="info" data-info="roc">i</button></div>
+        <div class="chart-box"><canvas id="chROC"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_fi">Feature importance</h3><button class="info" data-info="fi">i</button></div>
+        <div class="chart-box"><canvas id="chFI"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3 data-i18n="c_cm">Confusion matrix (test, n=2,500)</h3><button class="info" data-info="cm">i</button></div>
+        <div class="cm">
+          <div></div><div class="cmh" data-i18n="cm_pd">Pred. default</div><div class="cmh" data-i18n="cm_pn">Pred. no default</div>
+          <div class="cmh v" data-i18n="cm_ad">Actual default</div><div class="cell tp"><b>98</b><small>TP</small></div><div class="cell fn"><b>27</b><small>FN</small></div>
+          <div class="cmh v" data-i18n="cm_an">Actual no default</div><div class="cell fp"><b>312</b><small>FP</small></div><div class="cell tn"><b>2063</b><small>TN</small></div>
+        </div>
+        <div class="metrics">
+          <span>Recall <b>78.4%</b></span><span>Precision <b>23.9%</b></span><span>Accuracy <b>86.4%</b></span><span>Gini <b>0.74</b></span><span>KS <b>0.58</b></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 INSIGHTS -->
+    <h2 class="sec"><span>06</span><b data-i18n="s6">Key business insights</b></h2>
+    <div class="grid g4 insights">
+      <div class="ins"><span class="ins-n">-18%</span><p data-i18n="i1"></p></div>
+      <div class="ins"><span class="ins-n">×12</span><p data-i18n="i2"></p></div>
+      <div class="ins"><span class="ins-n">31%</span><p data-i18n="i3"></p></div>
+      <div class="ins"><span class="ins-n">€0.9M</span><p data-i18n="i4"></p></div>
+    </div>
+  </main>
+
+  <footer><span data-i18n="foot">Synthetic data for demonstration purposes · Logistic regression scorecard · Built with HTML/CSS/JS + Chart.js</span></footer>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal">
+    <div class="modal-box">
+      <div class="modal-h"><h3 id="mTitle"></h3><button id="mClose">✕</button></div>
+      <div class="modal-b">
+        <h4 data-i18n="m_what">What it shows</h4><p id="mWhat"></p>
+        <h4 data-i18n="m_read">How to read it</h4><p id="mRead"></p>
+        <h4 class="hl" data-i18n="m_ins">Business insight</h4><p id="mIns"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
